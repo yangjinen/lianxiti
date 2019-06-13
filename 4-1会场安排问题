@@ -1,0 +1,67 @@
+#include <iostream>
+ 
+using namespace std;
+struct node{
+	int time;
+	bool boe;
+};
+ 
+void quick(node a[],int left, int right){//快速排序
+	int i, j;//temp是标志位
+	node temp, t;
+	if (left > right)
+		return;
+	temp = a[left];
+	i = left;
+	j = right;
+	while (i != j){
+		while (a[j].time >= temp.time&&i<j){//从j开始往前寻找比标志位小的
+			j--;
+		}
+		while (a[i].time <= temp.time&&i<j){//从i开始往前寻找比标志位大的
+			i++;
+		}
+		if (i<j){//交换
+			t = a[i];
+			a[i] = a[j];
+			a[j] = t; 
+		}
+	}
+	a[left] = a[i];//
+	a[i] = temp;
+	quick(a,left, i - 1);//
+	quick(a,i + 1, right);
+}
+int ActivityNumber(node a[],int b){
+	int MaxNumber = 0, sum = 0;
+	for (int i = 0; i<b; i++){
+		if (a[i].boe == true){//遇到开始时间
+			sum++;
+			if (sum>MaxNumber){
+				MaxNumber = sum;//maxnumber是最大会场数
+			}
+		}
+		else//遇到结束时间
+			sum--;
+	}
+	return MaxNumber;
+}
+ 
+int main()
+{
+	int n;
+	 node a[100];
+	cout << "请输入开会次数，开始结束时间：" << endl;
+	cin >> n;
+	for (int i = 0; i<2 * n; i++){
+		cin >> a[i].time;
+		if (i % 2 == 1)
+			a[i].boe = false;//结束是false
+		else
+			a[i].boe = true;
+	}
+	quick(a,0, 2 * n-1);
+	cout << ActivityNumber(a,2 * n) << endl;
+	return 0;
+}
+
