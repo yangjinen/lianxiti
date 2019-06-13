@@ -1,0 +1,46 @@
+ #include <stdio.h>
+#include <string.h>
+int book[25][25],vist[25],que[25];//que数组表示在图中的点，book记录边，vist记录访问过的点
+int n,m,maxx;
+void dfs(int x,int sum){
+    if(x>n){//搜完所有的点，递归出口
+         maxx=sum;
+         return ;
+    }
+    int vt=0;
+    for(int j=0;j<sum;j++){//判断与图中的点是否两两相通
+        if(book[x][que[j]] == 0){
+                vt=1;
+                break;
+                }
+            }
+    if(vt == 0)//相通进入que数组，并且图中顶点+1
+    {
+        vist[x]=1;
+        que[sum]=x;
+        dfs(x+1,sum+1);
+    }
+      if(sum+n-x >maxx)//剪枝
+         dfs(x+1,sum);
+}
+int main(){
+    int t,vi=0;
+    scanf("%d",&t);
+    while(t--){
+        scanf("%d %d",&n,&m);
+        int x,y;
+        memset(vist,0,sizeof(vist));
+        memset(book,0,sizeof(book));
+        maxx=0;
+        for(int i=1;i<=m;i++){
+            scanf("%d %d",&x,&y);
+            book[x][y]=1;
+            book[y][x]=1;
+        }
+             dfs(1,0);
+        vi++;
+       printf("Case %d: %d\n",vi,maxx);
+    }
+    return 0;
+}
+
